@@ -126,9 +126,9 @@ vmap <F4> <esc>:Rgrep<cr>
 imap <F4> <esc>:Rgrep<cr>
 
 " F5 - просмотр списка буферов6
-nmap <F5> <Esc>:BufExplorer<cr>
-vmap <F5> <esc>:BufExplorer<cr>
-imap <F5> <esc><esc>:BufExplorer<cr>
+nmap <F5> <Esc>:UndotreeToggle<cr>
+vmap <F5> <esc>:UndotreeToggle<cr>
+imap <F5> <esc><esc>:UndotreeToggle<cr>
 
 " F6 - предыдущий буфер
 "map <F6> :bp<cr>
@@ -147,20 +147,17 @@ map <F8> :MarksBrowser<cr>
 vmap <F8> <esc>:MarksBrowser<cr>
 imap <F8> <esc>:MarksBrowser<cr>
 
-" F9 - "make" команда
 map <F9> :TRegister<cr>
 vmap <F9> <esc>:TRegister<cr>
 imap <F9> <esc>:TRegister<cr>
 
-" F10 - удалить буфер
 map <F10> :SessionList<cr>
 vmap <F10> <esc>:SessionList<cr>
 imap <F10> <esc>:SessionList<cr>
 
-" F11 - показать окно Taglist
-map <F11> :TlistToggle<cr>
-vmap <F11> <esc>:TlistToggle<cr>
-imap <F11> <esc>:TlistToggle<cr>
+map <F11> :GitGutterToggle<cr>
+vmap <F11> <esc>:GitGutterToggle<cr>
+imap <F11> <esc>:GitGutterToggle<cr>
 
 " F12 - обозреватель файлов
 map <F12> :Ex<cr>
@@ -193,12 +190,12 @@ map <C-Q> <Esc>:qa<cr>
 
 " Автозавершение слов по tab =)
 function InsertTabWrapper()
-    let col = col('.') - 1
-    if !col || getline('.')[col - 1] !~ '\k'
-        return "\<tab>"
-    else
-        return "\<c-p>"
-    endif
+let col = col('.') - 1
+if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+else
+    return "\<c-p>"
+endif
 endfunction
 imap <tab> <c-r>=InsertTabWrapper()<cr>
 
@@ -217,8 +214,6 @@ set complete+=t
 filetype plugin on
 au BufRead,BufNewFile *.phps    set filetype=php
 au BufRead,BufNewFile *.thtml    set filetype=php
-set ofu=syntaxcomplete#Complete
-set completeopt=longest,menuone
 
 " Настройки для SessionMgr
 let g:SessionMgr_AutoManage = 0
@@ -234,51 +229,6 @@ set mps-=[:]
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
-let g:erlangManPath="/usr/lib64/erlang/man"
-let g:erlangCompletionDisplayDoc=1
-let g:erlangCheckFile="/home/ashim/.vim/bundle/vimerl/compiler/erlang_check_file.erl"
-let g:erlangCompleteFile="/home/ashim/.vim/bundle/vimerl/autoload/erlang_complete.erl"
-let g:erl_author="Mijkenator <mijkenator@gmail.com>"
-let g:erl_company="P.A.G.A.N."
-let g:erl_replace_buffer=1
-
-function SuperErlangContext()
-    let exclusions = exists('g:SuperTabContextTextFileTypeExclusions') ?
-        \ g:SuperTabContextTextFileTypeExclusions : []
-    if index(exclusions, &ft) == -1
-        let curline = getline('.')
-        let cnum = col('.')
-        let synname = synIDattr(synID(line('.'), cnum - 1, 1), 'name')
-        if curline =~ '.*\(\w\|[\])]\)\(:\)\w*\%' . cnum . 'c' && synname !~ '\(String\|Comment\)'
-            return "\<c-x>\<c-o>"
-        endif
-    endif
-    " no return will result in the evaluation of the next
-    " configured context
-endfunction
-
-let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabCompletionContexts = ['SuperErlangContext', 's:ContextText', 's:ContextDiscover']
-
-autocmd BufNewFile,BufRead *.erl,*.hrl vmap u :-1/^%/s///<CR>
-autocmd BufNewFile,BufRead *.erl,*.hrl vmap c :-1/^/s//%/<CR>
-autocmd BufNewFile,BufRead *.java vmap u :-1/^\/\//s///<CR>
-autocmd BufNewFile,BufRead *.java vmap c :-1/^/s//\/\//<CR>
-
-command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
-set ruler
-set rulerformat=%55(%{strftime('%a\ %b\ %e\ %I:%M\ %p')}\ %5l,%-6(%c%V%)\ %P%)
-
-" Quick jumping between splits
-map <C-J> <C-W>j<C-W>_
-map <C-K> <C-W>k<C-W>_
-
-" delete current word, insert and normal modes
-inoremap <C-BS> <C-O>b<C-O>dw
-noremap <C-BS> bdw
-
-colors desert
-
 nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 set showmode
@@ -286,4 +236,9 @@ set showmode
 map <C-a> :BufExplorer<CR>
 vmap <C-a> <esc>:BufExplorer<cr>
 imap <C-a> <esc>:BufExplorer<cr>
+
+let g:gitgutter_highlight_lines = 0
+highlight clear SignColumn
+
+:set runtimepath^=~/.vim/bundle/vim-erlang-runtime/
 
