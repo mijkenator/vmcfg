@@ -15,7 +15,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 
-Plugin 'jakedouglas/exuberant-ctags'
+Plugin 'universal-ctags/ctags'
 Plugin 'vim-erlang/vim-erlang-tags'
 Plugin 'vim-erlang/vim-erlang-runtime'
 Plugin 'vim-erlang/vim-erlang-omnicomplete'
